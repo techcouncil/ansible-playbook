@@ -1,0 +1,2 @@
+# vagrant shim so we can pretend we're on ec2
+- include: vagrant_ec2_shim.yml

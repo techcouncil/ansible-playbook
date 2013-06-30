@@ -1,0 +1,39 @@
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: true
+
+- name: Install git
+  apt: pkg=git-core state=present
+  sudo: true
+
+- name: Install wget package (Debian based)
+  apt: pkg='wget' state=installed
+  only_if: "'$ansible_pkg_mgr' == 'apt'"
+  sudo: true
+
+- name: Install wget package (RedHat based)
+  yum: name='wget' state=installed
+  only_if: "'$ansible_pkg_mgr' == 'yum'"
+  sudo: true
+
+- name: Install Heroku toolbelt
+  shell: wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+
+- name: Map ssh-keys
+  file: src=/vagrant/.ssh/$item dest=/home/vagrant/.ssh/$item owner=vagrant group=vagrant state=link
+  with_items:
+    - id_rsa.pub
+    - id_rsa
+
+- name: Add Heroku keys
+  shell: heroku keys:add < /vagrant/herokupw
+  
+  
+- name: Link node-js-sample 
+  file: src=/vagrant/node-js-sample 
+        dest=/home/vagrant/node-js-sample 
+        owner=vagrant group=vagrant 
+        state=link
+
+

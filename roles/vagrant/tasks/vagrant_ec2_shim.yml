@@ -1,0 +1,37 @@
+# http://www.lshift.net/blog/2013/05/15/testing-ansible-playbooks-with-vagrant
+
+    - name: Create fake block device for /dev/xvdb, simulating ephemeral storage
+      file: src=/dev/ram1 path=/dev/xvdb mode=0660 owner=root group=disk state=link
+
+    - name: Create fake block device for /dev/xvdf, simulating an EBS volume
+      file: src=/dev/ram2 path=/dev/xvdf mode=0660 owner=root group=disk state=link
+
+    # As yet there's no ansible module for making a file system [1]. We try, and if mkfs fails
+    # we presume it's because there's already a file system on that device, and eat the
+    # failure.
+    #
+    # [1] https://github.com/ansible/ansible/pull/2776
+    # TODO: FIXME - there is now a filesystem-module in ansible
+    - name: Put a filesystem on block devices to emulate EBS volumes
+      shell: mkfs -t ext4 /dev/$item ; true
+      with_items:
+       - xvdb
+       - xvdf
+
+    - name: Create the ubuntu user
+      user: name=ubuntu state=present groups=admin
+
+    - name: Make the ubuntu user an sudoer
+      lineinfile: dest=/etc/sudoers regexp="^ubuntu" line="ubuntu ALL=(ALL) ALL" state=present
+
+    - name: Make /home/ubuntu/.ssh/
+      file: path=/home/ubuntu/.ssh/ owner=ubuntu group=ubuntu state=directory
+
+    # This is not as lame as it looks. The real playbook will run as the 'ubuntu' user,
+    # and this is a test environment.
+    - name: Copy the ansible key from the vagrant user to the ubuntu user
+      shell: cp /home/vagrant/.ssh/authorized_keys /home/ubuntu/.ssh/authorized_keys creates=/home/ubuntu/.ssh/authorized_keys
+
+    - name: Fix permissions of same
+      file: path=/home/ubuntu/.ssh/ owner=ubuntu group=ubuntu mode=0600 state=directory
+      file: path=/home/ubuntu/.ssh/authorized_keys owner=ubuntu group=ubuntu mode=0600 state=file

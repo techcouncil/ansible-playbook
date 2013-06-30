@@ -1,0 +1,20 @@
+# file: vagrant.yml
+- hosts: vagrant
+  user: vagrant
+  sudo: true
+  roles:
+    - vagrant
+
+- hosts: vagrant
+  user: nagios
+  sudo: true
+  roles:
+    - common
+    - webtier
+
+- hosts: vagrant
+  user: vagrant
+  roles:
+    - heroku_master
+    - devbox
+    

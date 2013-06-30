@@ -1,0 +1,17 @@
+
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  sudo: true
+
+- name: Install git
+  apt: pkg=git-core state=present
+  sudo: true
+
+- name: Install emacs
+  apt: pkg=emacs23-nox state=present
+  sudo: true
+  
+- name: Clone .emacs.d from akafred
+  git: repo=https://github.com/akafred/.emacs.d.git
+       dest=/home/vagrant/.emacs.d
+       version=HEAD

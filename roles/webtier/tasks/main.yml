@@ -1,0 +1,21 @@
+# Node.js-serving tier
+
+- name: Install stuff needed to add apt-repository
+  apt: pkg=$item state=present 
+  with_items:
+     - python-software-properties
+     - python 
+     - g++ 
+     - make
+
+- name: Add node.js apt-repository
+  apt_repository: repo=ppa:chris-lea/node.js
+  register: result
+
+- name: apt-get update
+  apt: update_cache=yes
+  when_changed: $result
+
+- name: Add node.js
+  apt: pkg=nodejs state=present
+
