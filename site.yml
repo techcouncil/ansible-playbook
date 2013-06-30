@@ -1,4 +1,4 @@
 # http://www.ansibleworks.com/docs/bestpractices.html
 # file: site.yml
 
-- include: vagrant.yml
+- include: local.yml

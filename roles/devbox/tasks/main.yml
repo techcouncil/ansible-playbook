@@ -15,3 +15,5 @@
   git: repo=https://github.com/akafred/.emacs.d.git
        dest=/home/vagrant/.emacs.d
        version=HEAD
+  sudo: true
+  sudo_user: vagrant

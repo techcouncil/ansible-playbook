@@ -1,4 +1,4 @@
-[vagrant]
-192.168.2.1 ansible_ssh_port=2222
+[local]
+192.168.1.1
 
 [ec2]

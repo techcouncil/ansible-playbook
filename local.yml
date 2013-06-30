@@ -1,18 +1,20 @@
-# file: vagrant.yml
-- hosts: vagrant
-  user: vagrant
+# file: local.yml
+- hosts: local
+  connection: local
   sudo: true
   roles:
     - vagrant
 
-- hosts: vagrant
+- hosts: local
+  connection: local
   user: nagios
   sudo: true
   roles:
     - common
     - webtier
 
-- hosts: vagrant
+- hosts: local
+  connection: local
   user: vagrant
   roles:
     - heroku_master
