@@ -2,3 +2,5 @@
 # file: site.yml
 
 - include: local.yml
+
+- include: ec2.yml

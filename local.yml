@@ -1,20 +1,17 @@
 # file: local.yml
 - hosts: local
-  connection: local
   sudo: true
   roles:
     - vagrant
 
 - hosts: local
-  connection: local
-  user: nagios
+  user: ubuntu
   sudo: true
   roles:
     - common
     - webtier
 
 - hosts: local
-  connection: local
   user: vagrant
   roles:
     - heroku_master

@@ -1,0 +1,6 @@
+# file: ec2.yml
+- hosts: ec2
+  sudo: true
+  roles:
+    - common
+    - webtier
