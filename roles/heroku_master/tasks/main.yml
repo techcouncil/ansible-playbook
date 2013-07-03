@@ -8,17 +8,22 @@
   sudo: true
 
 - name: Install wget package (Debian based)
-  apt: pkg='wget' state=installed
+  apt: pkg='wget' state=present
   only_if: "'$ansible_pkg_mgr' == 'apt'"
   sudo: true
 
 - name: Install wget package (RedHat based)
-  yum: name='wget' state=installed
+  yum: name='wget' state=present
   only_if: "'$ansible_pkg_mgr' == 'yum'"
   sudo: true
 
+- name: See if heroku is installed
+  shell: "[ -f /usr/bin/heroku ] && echo 'Found' || echo ''"
+  register: heroku_installed
+
 - name: Install Heroku toolbelt
   shell: wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh
+  when: (not heroku_installed.stdout)
 
 - name: Map ssh-keys
   file: src=/vagrant/.ssh/$item dest=/home/vagrant/.ssh/$item owner=vagrant group=vagrant state=link
@@ -28,7 +33,7 @@
 
 - name: Add Heroku keys
   shell: heroku keys:add < /vagrant/herokupw
-  
+  when: (not heroku_installed.stdout)
   
 - name: Link node-js-sample 
   file: src=/vagrant/node-js-sample 
