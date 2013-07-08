@@ -13,8 +13,12 @@
   
 - name: Clone .emacs.d from akafred
   git: repo=https://github.com/akafred/.emacs.d.git
-       dest=~/.emacs.d
+       dest=/home/${user}/.emacs.d
        version=HEAD
+
+- name: Set ownership
+  file: path=/home/${user}/.emacs.d state=directory recurse=yes owner=${user} group=${user}
+  sudo: true
   
 - name: See if oh-my-zsh is installed
   shell: "[ -d ~/.oh-my-zsh ] && echo 'Found' || echo ''"
@@ -31,10 +35,16 @@
 - name: install oh my zsh
   shell: cd /home/${user} && wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
   when: (not zsh_installed.stdout)
+  sudo: true
+  sudo_user: vagrant
 
 - name: zshrc config
   copy: src=zshrc dest=/home/${user}/.zshrc
-  
+
+- name: Set ownership
+  file: path=/home/${user}/.zshrc owner=${user} group=${user}
+  sudo: true
+
 - name: switch to zsh
   shell: chsh ${user} -s `which zsh`
   sudo: yes
