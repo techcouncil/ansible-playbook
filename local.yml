@@ -13,6 +13,7 @@
 
 - hosts: local
   user: vagrant
+  sudo: false
   roles:
     - heroku_master
     - devbox
