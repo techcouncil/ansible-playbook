@@ -26,7 +26,7 @@
   when: (not heroku_installed.stdout)
 
 - name: Map ssh-keys
-  file: src=/vagrant/.ssh/$item dest=/home/vagrant/.ssh/$item owner=vagrant group=vagrant state=link
+  file: src=/vagrant/.ssh/$item dest=/home/${user}/.ssh/$item owner=${user} group=${user} state=link
   with_items:
     - id_rsa.pub
     - id_rsa
@@ -35,10 +35,9 @@
   shell: heroku keys:add < /vagrant/herokupw
   when: (not heroku_installed.stdout)
   
-- name: Link node-js-sample 
-  file: src=/vagrant/node-js-sample 
-        dest=/home/vagrant/node-js-sample 
-        owner=vagrant group=vagrant 
+- name: Link bitstarter 
+  file: src=/vagrant/bitstarter
+        dest=/home/vagrant/bitstarter 
+        owner=${user} group=${user} 
         state=link
-
 
