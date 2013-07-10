@@ -33,15 +33,19 @@
 
 - name: ensure known hosts
   command: touch /home/${user}/.ssh/known_hosts
-  
+
 - name: set owner
   file: path=/home/${user}/.ssh/known_hosts owner=${user} group=${user}
 
 - name: remove heroku.com from known host
   shell: ssh-keygen -R heroku.com
+  sudo: true
+  sudo_user: vagrant
 
 - name: ensure heroku.com in known host
   shell: ssh-keyscan -H heroku.com >> ~/.ssh/known_hosts
+  sudo: true
+  sudo_user: vagrant
 
 - name: Add Heroku keys
   shell: heroku keys:add < /vagrant/herokupw
