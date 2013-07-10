@@ -1,0 +1,8 @@
+- hosts: local
+  user: vagrant
+  sudo: false
+  tasks:
+    - name: Deploy to heroku
+      command: git push heroku master chdir=/home/${user}/bitstarter
+      sudo: true
+      sudo_user: vagrant
