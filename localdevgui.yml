@@ -1,0 +1,9 @@
+# localdevgui.yml
+
+- hosts: local
+  user: ${user}
+  sudo: true
+  roles:
+    - gui
+    - guidevbox
+
