@@ -31,13 +31,22 @@
     - id_rsa.pub
     - id_rsa
 
+- name: ensure known hosts
+  command: touch /home/${user}/.ssh/known_hosts
+  
+- name: set owner
+  file: path=/home/${user}/.ssh/known_hosts owner=${user} group=${user}
+
+- name: remove heroku.com from known host
+  shell: ssh-keygen -R heroku.com
+
+- name: ensure heroku.com in known host
+  shell: ssh-keyscan -H heroku.com >> ~/.ssh/known_hosts
+
 - name: Add Heroku keys
   shell: heroku keys:add < /vagrant/herokupw
+  sudo: true
+  sudo_user: vagrant
   when: (not heroku_installed.stdout)
-  
-- name: Link bitstarter 
-  file: src=/vagrant/bitstarter
-        dest=/home/vagrant/bitstarter 
-        owner=${user} group=${user} 
-        state=link
+
 

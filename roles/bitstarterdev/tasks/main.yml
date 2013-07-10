@@ -1,0 +1,14 @@
+- name: Link bitstarter
+  file: src=/vagrant/bitstarter
+        dest=/home/${user}/bitstarter
+        owner=${user} group=${user}
+        state=link
+        
+- name: Install node_modules for web-app - based on package.json
+  npm: path=/home/${user}/bitstarter
+  
+- name: Install additional node modules
+  npm: name=$item path=/home/${user}/bitstarter
+  with_items:
+    - cheerio
+    - commander
