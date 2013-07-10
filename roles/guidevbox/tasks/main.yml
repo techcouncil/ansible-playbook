@@ -1,10 +1,10 @@
 
 - name: Install stuff needed to add apt-repository
-  apt: pkg=$item state=present 
+  apt: pkg=$item state=present
   with_items:
      - python-software-properties
-     - python 
-     - g++ 
+     - python
+     - g++
      - make
 
 - name: Add node.js apt-repository
@@ -13,7 +13,7 @@
 
 - name: apt-get update
   apt: update_cache=yes
-  when_changed: $result
+  when_changed: result
 
 - name: Accept terms Oracle
   shell: sudo echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
@@ -38,12 +38,12 @@
   shell: "[ -f /opt/intellij/idea-IC/bin/idea.sh ] && echo 'Found' || echo ''"
   register: intellij_installed
 
-- name: Create directory for IntelliJ 
+- name: Create directory for IntelliJ
   file: path=/opt/intellij state=directory
   when: (not intellij_installed.stdout)
   sudo: true
 
-- name: Download IntelliJ 
+- name: Download IntelliJ
   command: wget http://download.jetbrains.com/idea/ideaIC-12.1.4.tar.gz
            creates=ideaIC-12.1.4.tar.gz
            chdir=/opt/intellij
@@ -54,7 +54,22 @@
   script: install_intellij.sh
   when: (not intellij_installed.stdout)
   sudo: true
-  
+
 - name: Link IntelliJ
   file: src=/opt/intellij/idea-IC/bin/idea.sh path=/usr/local/bin/idea.sh state=link
+  sudo: true
+
+- name: Add sublime apt-repository
+  apt_repository: repo=ppa:webupd8team/sublime-text-3
+  register: sublime-result
+  sudo: true
+
+- name: apt-get update
+  apt: update_cache=yes
+  when_changed: $sublime-result
+  sudo: true
+
+- name: Add Sublime
+  apt: pkg=sublime-text-installer state=present
+  sudo: true
   sudo: true
